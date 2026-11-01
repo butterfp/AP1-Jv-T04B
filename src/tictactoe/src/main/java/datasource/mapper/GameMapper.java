@@ -6,32 +6,46 @@ import datasource.model.GameEntity;
 import domain.model.GameBoard;
 import domain.model.GameSession;
 import org.springframework.stereotype.Component;
+import domain.model.GameState;
+import domain.model.PlayerType;
 
 @Component
 public class GameMapper {
 
-    // Встроенный инструмент Спринга для работы с JSON
+    // Инструмент Jackson для перевода объектов/массивов в JSON и обратно
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // Переводим из бизнес-модели (domain) в сущность базы данных (entity)
     public GameEntity toEntity(GameSession domain) {
         try {
-            // Превращаем двумерный массив int[][] в JSON-строку
             String boardJson = objectMapper.writeValueAsString(domain.board().board());
-            return new GameEntity(domain.id(), boardJson);
+            return new GameEntity(
+                    domain.id(),
+                    boardJson,
+                    domain.xPlayerType() == null ? null : domain.xPlayerType().name(),
+                    domain.xPlayerId(),
+                    domain.oPlayerType() == null ? null : domain.oPlayerType().name(),
+                    domain.oPlayerId(),
+                    domain.stateName(),
+                    domain.winnerId());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Ошибка при конвертации доски в JSON", e);
+            throw new IllegalStateException("Ошибка при конвертации доски в JSON", e);
         }
     }
 
-    // Переводим из сущности базы данных (entity) обратно в бизнес-модель (domain)
     public GameSession toDomain(GameEntity entity) {
         try {
-            // Превращаем JSON-строку обратно в двумерный массив int[][]
             int[][] boardArray = objectMapper.readValue(entity.getBoard(), int[][].class);
-            return new GameSession(entity.id(), new GameBoard(boardArray));
+            return new GameSession(
+                    entity.getId(),
+                    new GameBoard(boardArray),
+                    entity.getXPlayerType() == null ? null : PlayerType.valueOf(entity.getXPlayerType()),
+                    entity.getXPlayerId(),
+                    entity.getOPlayerType() == null ? null : PlayerType.valueOf(entity.getOPlayerType()),
+                    entity.getOPlayerId(),
+                    GameState.valueOf(entity.getState()),
+                    entity.getWinnerId());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Ошибка при чтении доски из JSON", e);
+            throw new IllegalStateException("Ошибка при чтении доски из JSON", e);
         }
     }
 }
