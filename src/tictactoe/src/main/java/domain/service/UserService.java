@@ -1,25 +1,17 @@
 package domain.service;
 
-import domain.model.GameBoard;
-import domain.model.GameSession;
-import domain.model.PlayerType;
+import domain.model.User;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public interface TicTacToeService {
+public interface UserService {
 
-    GameSession createGame(PlayerType opponentType, UUID playerId);
+    User createUser(String login, String rawPassword);
 
-    GameSession getGameById(UUID gameId);
+    Optional<User> findByUuid(UUID id);
 
-    List<GameSession> getAvailableGames();
+    Optional<User> findByLogin(String login);
 
-    GameSession joinGame(UUID gameId, UUID playerId);
-
-    boolean validateMove(UUID gameId, UUID playerId, GameBoard updatedBoard);
-
-    GameSession makeMove(UUID gameId, UUID playerId, GameBoard updatedBoard);
-
-    String getGameStatus(GameSession game);
+    boolean validateCredentials(String login, String password);
 }

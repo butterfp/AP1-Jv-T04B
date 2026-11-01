@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
     public User createUser(String login, String rawPassword) {
         if (login == null || login.isBlank() || rawPassword == null || rawPassword.isBlank()) {
             throw new IllegalArgumentException("Вы что-то не дописываете!!!(я логин или пароль имею в виду)");
         }
+
         if (userRepository.findByLogin(login).isPresent()) {
             throw new IllegalArgumentException("Логин " + login + " уже существует");
         }
