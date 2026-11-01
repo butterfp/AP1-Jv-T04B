@@ -2,19 +2,24 @@ package domain.service;
 
 import domain.model.GameBoard;
 import domain.model.GameSession;
+import domain.model.PlayerType;
+
+import java.util.List;
 import java.util.UUID;
 
 public interface TicTacToeService {
 
-    void updateBoard(UUID id, GameBoard board);
+    GameSession createGame(PlayerType opponentType, UUID playerId);
 
-    void getNextMove(UUID gameId);
+    GameSession getGameById(UUID gameId);
 
-    boolean validateBoard(UUID gameId, GameBoard updatedBoard);
+    List<GameSession> getAvailableGames();
 
-    String getGameStatus(GameBoard board);
+    GameSession joinGame(UUID gameId, UUID playerId);
 
-    GameSession getGameById(UUID id);
+    boolean validateMove(UUID gameId, UUID playerId, GameBoard updatedBoard);
 
-    GameSession createGame();
+    GameSession makeMove(UUID gameId, UUID playerId, GameBoard updatedBoard);
+
+    String getGameStatus(GameSession game);
 }
