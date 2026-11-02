@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- *  @RestController — класс отдаёт JSON (каждый метод помечен как @ResponseBody)
- *  @RequestMapping — общий префикс пути для всех методов контроллера.
+ *  @RestController — класс отдаёт JSON
  */
 @RestController
 @RequestMapping("/auth")
